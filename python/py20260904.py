@@ -35,9 +35,13 @@ a[1]=_a
 a=[5,3]
 # 이건 파이썬에만 있는 자리 바꾸기 문법
 a[0],a[1]=a[1],a[0]
-print(f"a:{a}")
 
 
-a=[1,2]
+
+a=["banana","apple","kingkong","spiderman"]
 # 0번째 자리와 1번째 자리를 비교해서, 0번째 자리가 크면
 # 서로 자리 바꾸세요(if 사용)
+for index in range(len(a)-2):
+    if a[index] > a[index+1]:
+        a[index],a[index+1]=a[index+1],a[index]
+print(f"a:{a}")
