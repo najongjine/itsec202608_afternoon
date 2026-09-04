@@ -24,3 +24,11 @@ for i in person.values():
 # key는 i, value는 v에 담김
 for i,v in person.items():
     print(f"i:{i}, v:{v}")
+
+
+a=[5,3]
+# a 라는 list에서 5 와 3의 위치를 바꿔보세요
+_a=a[0]
+a[0]=a[1]
+a[1]=_a
+print(f"a:{a}") # a:[3, 3]
