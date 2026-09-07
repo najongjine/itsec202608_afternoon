@@ -41,7 +41,7 @@ a[0],a[1]=a[1],a[0]
 a=["banana","apple","kingkong","spiderman"]
 # 0번째 자리와 1번째 자리를 비교해서, 0번째 자리가 크면
 # 서로 자리 바꾸세요(if 사용)
-for index in range(len(a)-2):
+for index in range(len(a)-1):
     if a[index] > a[index+1]:
         a[index],a[index+1]=a[index+1],a[index]
 print(f"a:{a}")
