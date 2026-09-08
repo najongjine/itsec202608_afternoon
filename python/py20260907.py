@@ -43,3 +43,4 @@ f5(a)
 if a:
     a=3
 print(f"a:{a}")
+
