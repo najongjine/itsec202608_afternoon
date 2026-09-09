@@ -33,3 +33,18 @@ def beven(num):
     return str1
 
 #print(f"{x}:{beven(x)}")
+
+"""
+고대 시절에선 소수(prime number) 를 만들어내거나 판단하는 수식을
+찾는게 불가능했어요
+1 3 5 7 11 13 17
+"""
+def bprime(num):
+    bprime=True
+    for i in range(2,num): # 2 ~ num-1
+        if num%i == 0:
+            bprime=False
+    return bprime
+
+x=97896
+print(f"{x}는 소수인가?:{bprime(x)}")
