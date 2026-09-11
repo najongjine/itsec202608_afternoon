@@ -1,0 +1,32 @@
+/* c언어로 구현해본 로또 */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+int main() {
+    int nums[6];
+    int len = 0;
+    int sw = 0;
+    srand(time(NULL));
+    for (int i=0;; ) {
+        int x = rand() % 45 + 1;
+        for (int k = 0; k < 6; k++) {
+            if (x==nums[k]) {
+                sw = 1;
+            }
+        }
+        if (sw) {
+            sw = 0;
+            continue;
+        }
+        nums[i] = x;
+        i++;
+        len++;
+        if (i >= 6) break;
+    }
+    for (int i = 0; i < 6;i++) {
+        printf("%d, ", nums[i]);
+    }
+
+    return 0;
+}
