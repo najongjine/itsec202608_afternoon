@@ -109,5 +109,8 @@ scores = [70, 85, 90, 60, 85]
 - 현재 리스트에서 85가 몇 개 있는지 출력한다.
 - 최종 리스트와 removed_score를 출력한다.
 """
-
+print(scores[1:4])
+scores.append(100)
+scores.extend([75,80])
+scores.insert(2,95)
 
