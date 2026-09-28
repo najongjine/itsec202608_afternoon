@@ -126,4 +126,19 @@ print(f"removed_score:{removed_score}")
 print(f"최종 score:{scores}")
 """
 
+scores=[60,61,80,85,70,71,99,98,89]
+"""
+점수가 90~100을 A학점이라고 하자.
+A학점을 받은 학생의 수, 평균, 총합을 구하시오
+"""
+cnt=0
+avg=0
+sum=0
+for element in scores:
+    if element >= 90:
+        cnt+=1
+        sum+=element
+print(f"A학점의 총 갯수:{cnt}")
+print(f"A학점의 총 합:{sum}")
+print(f"A학점의 평균:{sum/cnt}")
 
