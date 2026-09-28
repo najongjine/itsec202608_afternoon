@@ -59,3 +59,14 @@ name="준호"
 - 이름이 blacklist 안에 포함되어 있지 않은지 확인한다
 - 입장권을 사고 난 뒤 남는 돈을 계산한다
 """
+# 이걸 방화벽 패턴이라고 합니다
+if age< 17:
+    print(f"나이 자격 안됨")
+    exit() # 프로그램 종료 코드
+if money < ticket_price:
+    print(f"돈 부족함")
+    exit()
+if name in blacklist:
+    print(f"블랙리스트에 올라가있습니다")
+    exit()
+print(f"남은금액:{money-ticket_price}")
