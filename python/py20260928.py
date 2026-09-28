@@ -109,8 +109,21 @@ scores = [70, 85, 90, 60, 85]
 - 현재 리스트에서 85가 몇 개 있는지 출력한다.
 - 최종 리스트와 removed_score를 출력한다.
 """
+"""
 print(scores[1:4])
 scores.append(100)
 scores.extend([75,80])
 scores.insert(2,95)
+# 점수 60이 몇 번째 인덱스에 있는지 출력한다.
+i=scores.index(60)
+print(scores.index(60))
+# 점수 60을 리스트에서 삭제한다.
+scores.pop(i)
+removed_score=scores.pop(3)
+del(scores[0:2])
+print(scores.count(85))
+print(f"removed_score:{removed_score}")
+print(f"최종 score:{scores}")
+"""
+
 
