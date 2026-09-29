@@ -27,3 +27,12 @@ r=[len(x) for x in a]
 
 #  3        2           3     1
 r=[x if len(x)<=3 else -1 for x in a]
+
+
+a={"name":"python","age":20}
+a["sight"]=1.5 # {"name":"python","age":20, "sight":1.5}
+a["age"]=30 # {"name":"python","age":30, "sight":1.5}
+
+a.keys() # ['name', 'age', 'sight']
+a.values() # ['python', 30, 1.5]
+print(a.items()) # [('name', 'python'), ('age', 30), ('sight', 1.5)]
