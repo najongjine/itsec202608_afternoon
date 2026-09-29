@@ -35,4 +35,20 @@ a["age"]=30 # {"name":"python","age":30, "sight":1.5}
 
 a.keys() # ['name', 'age', 'sight']
 a.values() # ['python', 30, 1.5]
-print(a.items()) # [('name', 'python'), ('age', 30), ('sight', 1.5)]
+a.items() # [('name', 'python'), ('age', 30), ('sight', 1.5)]
+
+for e in a:
+    #print(f"e:{e}") # key 만 나옴
+    pass
+
+for e,f in a.items():
+    print(f"e:{e}, f:{f}")
+
+people=[{"name":"pepe","age":14},{"name":"momo","age":20}
+        ,{"name":"bobo","age":17}]
+"""
+people 에 있는 사람들이 담배를 사려고 한다.
+나이는 19세 이상만 판매 가능하다.
+각 사람의 나이를 보고 자격 미달이면 "판매를 할수 없습니다" 
+를 출력하시오
+"""
