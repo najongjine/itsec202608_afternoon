@@ -99,10 +99,8 @@ s1=Student(10)
 class Animal:
     def __init__(self, name):
         self.name = name
-
     def sound(self):
         return "소리"
-
 
 class Dog(Animal):
     def __init__(self, name, age):
