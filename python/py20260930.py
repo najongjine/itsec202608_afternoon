@@ -66,5 +66,17 @@ class Student:
 s1 = Student("Kim", 80)
 s2 = Student("Lee", 90)
 s1.score += 10
-s1.print_score()
-s2.print_score()
+
+
+class Counter:
+    count = 0
+    def __init__(self):
+        Counter.count += 1
+        self.num = Counter.count
+a = Counter()
+b = Counter()
+c = Counter()
+print(a.num)
+print(b.num)
+print(c.num)
+print(Counter.count)
