@@ -83,11 +83,40 @@ class Person:
 
 class Student(Person):
     def __init__(self,age):
+        super().__init__("pepe")
         self.age=age
     def welcome(self):
         print(f"age:{self.age}")
 
 p1=Person("pepe")
 s1=Student(10)
-print(f"p1.name:{p1.name}")
-print(f"s1.age:{s1.age}")
+#print(f"p1.name:{p1.name}")
+#print(f"s1.age:{s1.age}")
+#print(f"s1.name:{s1.name}")
+
+
+
+class Animal:
+    def __init__(self, name):
+        self.name = name
+
+    def sound(self):
+        return "소리"
+
+
+class Dog(Animal):
+    def __init__(self, name, age):
+        super().__init__(name)
+        self.age = age
+    def sound(self):
+        if self.age >= 5:
+            return "멍멍"
+        else:
+            return "왈왈"
+
+animals = [
+    Dog("초코", 3),
+    Dog("보리", 7)
+]
+for a in animals:
+    print(a.name, a.sound())
