@@ -55,3 +55,16 @@ father2.color="노랑"
 #father.test()
 #father.color="검은색"
 #father.test()
+
+class Student:
+    def __init__(self, name, score):
+        self.name = name
+        self.score = score
+    def print_score(self):
+        print(self.name, self.score)
+
+s1 = Student("Kim", 80)
+s2 = Student("Lee", 90)
+s1.score += 10
+s1.print_score()
+s2.print_score()
