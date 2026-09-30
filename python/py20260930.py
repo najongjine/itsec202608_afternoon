@@ -83,11 +83,11 @@ class Person:
 
 class Student(Person):
     def __init__(self,age):
-        self.age=10
+        self.age=age
     def welcome(self):
         print(f"age:{self.age}")
 
-p1=Person()
-s1=Student()
+p1=Person("pepe")
+s1=Student(10)
 print(f"p1.name:{p1.name}")
 print(f"s1.age:{s1.age}")
