@@ -76,7 +76,18 @@ class Counter:
 a = Counter()
 b = Counter()
 c = Counter()
-print(a.num)
-print(b.num)
-print(c.num)
-print(Counter.count)
+
+class Person:
+    def __init__(self,name):
+        self.name=name
+
+class Student(Person):
+    def __init__(self,age):
+        self.age=10
+    def welcome(self):
+        print(f"age:{self.age}")
+
+p1=Person()
+s1=Student()
+print(f"p1.name:{p1.name}")
+print(f"s1.age:{s1.age}")
