@@ -6,7 +6,7 @@ class Person:
         self.money=money
         self.id=id
     def transmoney(self,other_person_id=0,money=0,):
-        other_person = next((person for person in people if person.id == other_person_id), None)
+        other_person = next(filter(lambda p: p.id == other_person_id, people), None)
         self.money=self.money-money
         other_person.money=other_person.money+money
     def plusmoney(self,money):
