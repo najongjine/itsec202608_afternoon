@@ -1,4 +1,5 @@
 people=[]
+myaccount=None
 class Person:
     def __init__(self,name="",id=0,money=0):
         self.name=name
@@ -29,9 +30,17 @@ def show_all_account():
     for e in people:
         e.showmyaccount()
 
+make_account(name="pepe",money=5000)
+make_account(name="bobo",money=15000)
+make_account(name="momo",money=1000)
+
 menu=input("""
     1. 계정생성
     2. 송금
     3. 입금
     메뉴를 골라주세요:
     """)
+match menu:
+    case 1:
+        make_account()
+
