@@ -21,11 +21,15 @@ class Person:
         pass
 
 def make_account(name="",money=0,b_myaccount=False):
-    if myaccount:
+    global myaccount
+    if b_myaccount:
         name=input("이름을 입력하세요:")
     newperson=Person(name=name,money=money)
     newperson.id=len(people)+1
     people.append(newperson)
+    if b_myaccount:
+        myaccount=newperson
+        print(f"myaccount:{myaccount}")
     pass
 
 def show_all_account():
@@ -47,7 +51,8 @@ while True:
     menu=int(menu)
     match menu:
         case 1:
-            make_account()
+            print(f"make_account")
+            make_account(b_myaccount=True)
         case 2:
             other_person_id=int(input("상대방의 id:"))
             money=int(input("보낼 금액:"))
