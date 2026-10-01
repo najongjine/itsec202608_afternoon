@@ -5,7 +5,8 @@ class Person:
         self.name=name
         self.money=money
         self.id=id
-    def transmoney(self,other_person,money=0,):
+    def transmoney(self,other_person_id=0,money=0,):
+        other_person = next((person for person in people if person.id == other_person_id), None)
         self.money=self.money-money
         other_person.money=other_person.money+money
     def plusmoney(self,money):
@@ -43,4 +44,6 @@ menu=input("""
 match menu:
     case 1:
         make_account()
+    case 2:
+        myaccount.tr
 
