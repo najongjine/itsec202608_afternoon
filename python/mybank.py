@@ -7,6 +7,8 @@ class Person:
     def transmoney(self,other_person,money=0,):
         self.money=self.money-money
         other_person.money=other_person.money+money
+    def plusmoney(self,money):
+        self.money=self.money+money
     def showmyaccount(self):
         print(f"""
             id:{self.id},
@@ -17,6 +19,7 @@ class Person:
         pass
 
 def make_account(name="",money=0):
+    newname=input("이름을 입력하세요:")
     newperson=Person(name=name,money=money)
     newperson.id=len(people)+1
     people.append(newperson)
@@ -26,6 +29,9 @@ def show_all_account():
     for e in people:
         e.showmyaccount()
 
-newname=input("이름을 입력하세요:")
-make_account(name=newname)
-show_all_account()
+menu=input("""
+    1. 계정생성
+    2. 송금
+    3. 입금
+    메뉴를 골라주세요:
+    """)
