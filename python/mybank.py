@@ -1,7 +1,8 @@
 class Person:
-    def __init__(self,name,money=0):
+    def __init__(self,name,id,money=0):
         self.name=name
         self.money=money
+        self.id=id
     def transmoney(self,money):
         pass
     def showmyaccount(self):
