@@ -44,6 +44,7 @@ while True:
         4. 전체계정 조회
         메뉴를 골라주세요:
         """)
+    menu=int(menu)
     match menu:
         case 1:
             make_account()
