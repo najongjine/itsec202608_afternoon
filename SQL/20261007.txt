@@ -1,0 +1,67 @@
+-- database 생성 명령어
+CREATE DATABASE test1;
+-- database 삭제 명령어
+DROP DATABASE test1;
+
+-- 테이블 만드는 명령어
+CREATE TABLE t_board(
+id SERIAL PRIMARY KEY , 
+title VARCHAR,
+content TEXT
+);
+
+CREATE TABLE t_user(
+id serial PRIMARY KEY,
+username VARCHAR,
+password VARCHAR(2000),
+phoneno VARCHAR,
+created_dt TIMESTAMPTZ DEFAULT now()
+);
+
+-- 칼럼 추가 명령어
+ALTER TABLE t_board
+ADD COLUMN content TEXT;
+
+ALTER TABLE t_board
+ADD COLUMN crrteddt TIMESTAMPTZ DEFAULT now();
+
+ALTER TABLE t_board
+ADD COLUMN username VARCHAR;
+
+
+-- 칼럼 삭제
+ALTER TABLE t_board
+DROP COLUMN username;
+
+-- 칼럼 이름 변경
+ALTER TABLE t_board
+RENAME COLUMN crrteddt TO created_dt;
+
+-- 테이블 삭제 명령어
+DROP TABLE t_board;
+
+INSERT INTO t_board(title, content)
+VALUES
+('ㅎㅇ','힘들어요'),
+('ㅎㅇ','괜찬아요');
+
+INSERT INTO t_user(username,password,phoneno)
+VALUES
+('pepe','aaaa','111'),
+('momo','aaaa','222')
+;
+
+SELECT
+*
+FROM t_board;
+
+SELECT
+*
+FROM t_user;
+
+UPDATE t_board SET
+username='honaldo'
+WHERE username='pepe';
+
+
+
