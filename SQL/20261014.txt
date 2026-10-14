@@ -40,3 +40,11 @@ LIMIT 1000
 CREATE INDEX idx_board_created_dt
 ON t_board(created_dt);
 
+SELECT
+b.user_id
+,MAX(u.username) AS "username"
+,COUNT(b.id) AS "작성한개시글수"
+FROM t_board as b
+JOIN t_user as u ON b.user_id=u.id
+GROUP BY b.user_id
+;
