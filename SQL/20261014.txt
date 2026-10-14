@@ -3,3 +3,13 @@ ADD COLUMN viewcnt INT4 DEFAULT 0 CHECK( viewcnt>=0);
 
 ALTER TABLE t_board
 ADD COLUMN likecnt INT4 DEFAULT 0 CHECK( likecnt>=0);
+
+
+INSERT INTO t_board(title, content, user_id, viewcnt, likecnt)
+SELECT
+    substring(md5(random()::text) FROM 1 FOR 10),
+    substring(md5(random()::text) FROM 1 FOR 10),
+    (SELECT id FROM t_user ORDER BY random() LIMIT 1),
+    floor(random() * 45 + 1)::int,
+    floor(random() * 45 + 1)::int
+FROM generate_series(1, 100);
