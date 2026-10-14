@@ -20,3 +20,23 @@ SELECT
     (SELECT id FROM t_user ORDER BY random() LIMIT 1),
     substring(md5(random()::text) FROM 1 FOR 10)
 FROM generate_series(1, 100);
+
+
+SELECT
+b.id AS "board_id"
+,b.user_id
+,b.title
+,b.content
+,b.viewcnt
+,b.likecnt
+,u.username
+,b.created_dt
+FROM t_board AS b
+JOIN t_user AS u ON b.user_id = u.id
+ORDER BY created_dt DESC
+LIMIT 1000
+;
+
+CREATE INDEX idx_board_created_dt
+ON t_board(created_dt);
+
