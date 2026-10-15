@@ -1,8 +1,11 @@
 # Elysia with Bun runtime
 
 bun 설치
+
 powershell -c "irm bun.sh/install.ps1|iex"
+
 bun path 등록
+
 $env:Path += ";$env:USERPROFILE\.bun\bin"
 
 ## Getting Started
