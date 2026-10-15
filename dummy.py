@@ -1,7 +1,11 @@
-lol = [[1,2,3],[4,5],[6,7,8,9]]
-print(lol[0])
-print(lol[2][1])
-for sub in lol:
-    for item in sub:
-        print(item, end = '')
-    print()
+class good :
+	li = ["seoul", "kyeonggi","inchon","daejeon","daegu","pusan"]
+
+g = good()
+str01 = '' # skiddp
+for i in g.li:
+	# "kyeonggi"
+	# str01 = 's' + 'k'
+	str01 = str01 + i[0]
+    
+print(str01)
