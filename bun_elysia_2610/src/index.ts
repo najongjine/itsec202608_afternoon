@@ -9,12 +9,30 @@ listen(3000) = 이 서버의 id 번호는 3000번입니다
 const app = new Elysia();
 
 app.get("/", () => "Hello Elysia");
-app.get("/test", async () => {
-  let response = {
+app.get("/test", async ({ query }) => {
+  let response: { success: boolean; data: any; msg: string } = {
     success: true,
     data: null,
     msg: "",
   };
+  let myname = query.myname;
+  let name = query.name;
+  console.log(`name: ${name}`);
+  let myobj1 = { myname: myname, name: name };
+  response.data = myobj1;
+  return response;
+});
+app.get("/test2", async ({ query }) => {
+  let response: { success: boolean; data: any; msg: string } = {
+    success: true,
+    data: null,
+    msg: "",
+  };
+  let username = query.username;
+  let password = query.password;
+
+  let myobj1 = { username: username, password: password };
+  response.data = myobj1;
   return response;
 });
 
