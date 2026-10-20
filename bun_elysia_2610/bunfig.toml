@@ -1,0 +1,2 @@
+# 환경 파일은 src/db/env.ts에서 실행 모드에 맞춰 로딩합니다.
+env = false

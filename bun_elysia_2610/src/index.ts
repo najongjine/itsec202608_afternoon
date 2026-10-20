@@ -1,4 +1,5 @@
 import { Elysia } from "elysia";
+import { closeDb, db } from "./db";
 
 /*
 MyClass myclass= new Myclass();
@@ -6,7 +7,9 @@ new Elysia 라는 객체를 만들고,
 .get 이라는 기능을 탑재 시키고, listen 이라는 기능도 탑재 시켰다
 listen(3000) = 이 서버의 id 번호는 3000번입니다
  */
-const app = new Elysia();
+const app = new Elysia().decorate("db", db).onStop(async () => {
+  await closeDb();
+});
 
 app.get("/", () => "Hello Elysia");
 app.get("/test", async ({ query }) => {
