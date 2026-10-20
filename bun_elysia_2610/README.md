@@ -69,17 +69,17 @@ bun run dev
 
 - `src/db/index.ts`: PostgreSQL 연결 풀과 Drizzle `db`, 연결 종료 함수 `closeDb`
 - `src/db/env.ts`: 연결 환경 변수 로딩 및 검증
-- `src/db/schema.ts`: 테이블 정의 (예제 `users` 포함)
+- `drizzle/schema.ts`: 실제 DB에서 가져온 테이블 정의
 - `drizzle.config.ts`: Drizzle Kit 설정
 - `drizzle/`: 생성된 SQL 마이그레이션
 
 라우트에서는 Elysia 컨텍스트에 등록된 `db`를 사용합니다.
 
 ```ts
-import { users } from "./db/schema";
+import { tBoard } from "../drizzle/schema";
 
-app.get("/users", async ({ db }) => {
-  return await db.select().from(users);
+app.get("/boards", async ({ db }) => {
+  return await db.select().from(tBoard);
 });
 ```
 

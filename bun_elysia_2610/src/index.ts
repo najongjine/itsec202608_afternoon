@@ -1,5 +1,6 @@
 import { Elysia } from "elysia";
 import { closeDb, db } from "./db";
+import { tBoard } from "../drizzle/schema";
 
 /*
 MyClass myclass= new Myclass();
@@ -38,7 +39,22 @@ app.get("/test2", async ({ query }) => {
   response.data = myobj1;
   return response;
 });
-
+app.get("/dbtest", async ({ db }) => {
+  let response: { success: boolean; data: any; msg: string } = {
+    success: true,
+    data: null,
+    msg: "",
+  };
+  try {
+    response.data = await db.select().from(tBoard).orderBy(tBoard.id).limit(10);
+    return response;
+  } catch (e: any) {
+    console.log(e);
+    response.success = false;
+    response.msg = `!!!error. ${e?.message}`;
+    return response;
+  }
+});
 app.listen(3000);
 
 console.log(

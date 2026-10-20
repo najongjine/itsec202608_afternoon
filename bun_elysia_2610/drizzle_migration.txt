@@ -1,0 +1,6 @@
+개발 DB 기준, PowerShell에서:
+$env:NODE_ENV = "development"
+bun run --bun drizzle-kit pull
+
+bun run typecheck
+(TypeScript 코드에 타입 오류가 있는지 검사하는 명령어)
