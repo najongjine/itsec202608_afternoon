@@ -9,17 +9,17 @@ INSERT INTO t_board(title, content, user_id, viewcnt, likecnt)
 SELECT
     substring(md5(random()::text) FROM 1 FOR 10),
     substring(md5(random()::text) FROM 1 FOR 10),
-    (SELECT id FROM t_user ORDER BY random() LIMIT 1),
+    (SELECT id FROM t_user ORDER BY random() + g.n * 0 LIMIT 1),
     floor(random() * 45 + 1)::int,
     floor(random() * 45 + 1)::int
-FROM generate_series(1, 100);
+FROM generate_series(1, 100) AS g(n);
 
 INSERT INTO t_comment(board_id, user_id, cmt)
 SELECT
-    (SELECT id FROM t_board ORDER BY random() LIMIT 1),
-    (SELECT id FROM t_user ORDER BY random() LIMIT 1),
+    (SELECT id FROM t_board ORDER BY random() + g.n * 0 LIMIT 1),
+    (SELECT id FROM t_user ORDER BY random() + g.n * 0 LIMIT 1),
     substring(md5(random()::text) FROM 1 FOR 10)
-FROM generate_series(1, 100);
+FROM generate_series(1, 100) AS g(n);
 
 
 SELECT
