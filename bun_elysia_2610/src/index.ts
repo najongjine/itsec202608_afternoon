@@ -1,6 +1,6 @@
 import { Elysia } from "elysia";
-import { closeDb, db } from "./db";
-import { tBoard } from "../drizzle/schema";
+import { closeDb } from "./db";
+import { userRouter } from "./router/user_router";
 
 /*
 MyClass myclass= new Myclass();
@@ -8,25 +8,11 @@ new Elysia 라는 객체를 만들고,
 .get 이라는 기능을 탑재 시키고, listen 이라는 기능도 탑재 시켰다
 listen(3000) = 이 서버의 id 번호는 3000번입니다
  */
-const app = new Elysia().decorate("db", db).onStop(async () => {
-  await closeDb();
-});
+const app = new Elysia();
 
 app.get("/", () => "Hello Elysia");
-app.get("/test", async ({ query }) => {
-  let response: { success: boolean; data: any; msg: string } = {
-    success: true,
-    data: null,
-    msg: "",
-  };
-  let myname = query.myname;
-  let name = query.name;
-  console.log(`name: ${name}`);
-  let myobj1 = { myname: myname, name: name };
-  response.data = myobj1;
-  return response;
-});
-app.get("/test2", async ({ query }) => {
+
+userRouter.get("/test2", async ({ query }) => {
   let response: { success: boolean; data: any; msg: string } = {
     success: true,
     data: null,
@@ -39,22 +25,12 @@ app.get("/test2", async ({ query }) => {
   response.data = myobj1;
   return response;
 });
-app.get("/dbtest", async ({ db }) => {
-  let response: { success: boolean; data: any; msg: string } = {
-    success: true,
-    data: null,
-    msg: "",
-  };
-  try {
-    response.data = await db.select().from(tBoard).orderBy(tBoard.id).limit(10);
-    return response;
-  } catch (e: any) {
-    console.log(e);
-    response.success = false;
-    response.msg = `!!!error. ${e?.message}`;
-    return response;
-  }
+
+app.use(userRouter);
+app.onStop(async () => {
+  await closeDb();
 });
+
 app.listen(3000);
 
 console.log(
