@@ -6,17 +6,18 @@ const app = new Elysia();
 
 app.get("/", () => "Hello Elysia");
 
-userRouter.get("/test2", async ({ query }) => {
+app.get("/test2", async ({ query }) => {
   let response: { success: boolean; data: any; msg: string } = {
     success: true,
     data: null,
     msg: "",
   };
-  let username = query.username;
-  let password = query.password;
+  let a:any={a:1,b:2};
+  let a_b:any={a2:1,b2:2, a};
+  let a_b_c:any={a3:1,b3:2, a_b,a};
 
-  let myobj1 = { username: username, password: password };
-  response.data = myobj1;
+ 
+  response.data = a_b_c?.a_b?.a?.a?.b?.a||"그런거 없어";
   return response;
 });
 
