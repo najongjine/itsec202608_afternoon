@@ -34,7 +34,9 @@ userRouter.post("/register", async ({request}) => {
     그런데 사용자가 이런거 안보냈으면 그냥 "" 으로 처리해 */
     let username=formdata?.get("username")?.toString()||"";
     let password=formdata?.get("password")?.toString()||"";
-    response.data = { username: username, password: password };
+    let data:any=await db.insert(tUser).values({username:username,password:password}).returning();
+    data=data[0]||{};
+    response.data = data;
     return response;
   } catch (e: any) {
     console.log(e);
