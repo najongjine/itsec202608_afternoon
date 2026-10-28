@@ -1,6 +1,8 @@
 import { Elysia } from "elysia";
 import { db } from "../db";
 import { tUser } from "../../drizzle/schema";
+import { eq } from "drizzle-orm";
+import { hashPassword } from "../utils/crypto";
 
 // export = 자바에서 public 말하는 겁니다
 export const userRouter = new Elysia({ prefix: "/user" });
@@ -12,7 +14,8 @@ userRouter.get("/test", async () => {
     msg: "",
   };
   try {
-    response.data = await db.select().from(tUser).orderBy(tUser.id).limit(10);
+    const users = await db.select().from(tUser).orderBy(tUser.id).limit(10);
+    response.data = users.map(({ password, ...user }) => user);
     return response;
   } catch (e: any) {
     console.log(e);
@@ -34,9 +37,23 @@ userRouter.post("/register", async ({request}) => {
     그런데 사용자가 이런거 안보냈으면 그냥 "" 으로 처리해 */
     let username=formdata?.get("username")?.toString()||"";
     let password=formdata?.get("password")?.toString()||"";
-    let data:any=await db.insert(tUser).values({username:username,password:password}).returning();
+    let phoneno=formdata?.get("phoneno")?.toString()||"";
+    // 유저네임 중복 검색
+    const existingUser = await db.select().from(tUser)
+    .where(eq(tUser.username, username))
+    .limit(1);
+    if (existingUser.length > 0) {
+      response.success = false;
+      response.msg = "username 중복됨";
+      return response;
+    }
+
+    const passwordHash = await hashPassword(password);
+    let data:any=await db.insert(tUser).values({username:username,password:passwordHash,phoneno:phoneno})
+    .returning();
     data=data[0]||{};
-    response.data = data;
+    const { password: storedPassword, ...user } = data;
+    response.data = user;
     return response;
   } catch (e: any) {
     console.log(e);
