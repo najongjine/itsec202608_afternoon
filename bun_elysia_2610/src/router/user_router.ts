@@ -2,7 +2,7 @@ import { Elysia } from "elysia";
 import { db } from "../db";
 import { tUser } from "../../drizzle/schema";
 import { eq } from "drizzle-orm";
-import { hashPassword } from "../utils/crypto";
+import { hashPassword, verifyPassword, encrypt, decrypt } from "../utils/crypto";
 
 // export = 자바에서 public 말하는 겁니다
 export const userRouter = new Elysia({ prefix: "/user" });
@@ -35,9 +35,9 @@ userRouter.post("/register", async ({request}) => {
     const formdata=await request.formData();
     /* formdata라는 큰 상자에서 username,password 라는거 꺼내. 
     그런데 사용자가 이런거 안보냈으면 그냥 "" 으로 처리해 */
-    let username=formdata?.get("username")?.toString()||"";
-    let password=formdata?.get("password")?.toString()||"";
-    let phoneno=formdata?.get("phoneno")?.toString()||"";
+    let username=formdata?.get("username")?.toString()?.trim()||"";
+    let password=formdata?.get("password")?.toString()?.trim()||"";
+    let phoneno=formdata?.get("phoneno")?.toString()?.trim()||"";
     // 유저네임 중복 검색
     const existingUser = await db.select().from(tUser)
     .where(eq(tUser.username, username))
@@ -49,7 +49,11 @@ userRouter.post("/register", async ({request}) => {
     }
 
     const passwordHash = await hashPassword(password);
-    let data:any=await db.insert(tUser).values({username:username,password:passwordHash,phoneno:phoneno})
+    let phonenoEncrypted = "";
+    if (phoneno) {
+      phonenoEncrypted = encrypt(phoneno);
+    }
+    let data:any=await db.insert(tUser).values({username:username,password:passwordHash,phoneno:phonenoEncrypted})
     .returning();
     data=data[0]||{};
     const { password: storedPassword, ...user } = data;
