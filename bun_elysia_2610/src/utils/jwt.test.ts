@@ -42,12 +42,28 @@ test("발급한 토큰 검증 및 기본 1시간 만료", async () => {
   expect(decodeJwt(token)).toMatchObject({ iss: "bun-elysia", aud: "bun-elysia-api" });
 });
 
-test("유효 시간 지정 및 불필요한 개인정보 제외", async () => {
-  const input = { userId: 3, password: "do-not-include" };
+test("원하는 데이터 보존 및 유효 시간 지정", async () => {
+  const input = { userId: 1, msg: "ㅎㅇ", roles: ["student"], profile: { level: 2 }, enabled: true, optional: null };
   const token = await signToken(input, 900);
   const auth = await verifyToken(token);
   expect(auth!.exp - auth!.iat).toBe(900);
-  expect(decodeJwt(token)).not.toHaveProperty("password");
+  expect(decodeJwt(token)).toMatchObject(input);
+  expect(auth).toMatchObject(input);
+});
+
+test("userId 없이도 원하는 payload로 발급 및 검증", async () => {
+  const auth = await verifyToken(await signToken({ msg: "ㅎㅇ" }));
+  expect(auth?.msg).toBe("ㅎㅇ");
+  expect(auth).not.toHaveProperty("userId");
+});
+
+test("발급 시간·만료·발급자·대상은 모듈 설정 적용", async () => {
+  const input = { msg: "ㅎㅇ", iat: 0, exp: 1, iss: "another-app", aud: "another-api" };
+  const auth = await verifyToken(await signToken(input, 900));
+  expect(auth).toMatchObject({ msg: "ㅎㅇ", iss: "bun-elysia", aud: "bun-elysia-api" });
+  expect(auth!.iat).toBeGreaterThan(0);
+  expect(auth!.exp - auth!.iat).toBe(900);
+  expect(input).toEqual({ msg: "ㅎㅇ", iat: 0, exp: 1, iss: "another-app", aud: "another-api" });
 });
 
 test("변조, 다른 키, 잘못된 토큰 거부", async () => {
@@ -68,11 +84,10 @@ test("만료 및 미래 nbf 토큰 거부", async () => {
   expect(await verifyToken(await externalToken({ nbf: now + 3600 }))).toBeNull();
 });
 
-test("만료 시간, 발급 시간, 사용자 ID 누락 또는 타입 오류 거부", async () => {
+test("만료 시간, 발급 시간 누락 또는 타입 오류 거부", async () => {
   for (const claims of [
-    { exp: undefined }, { iat: undefined }, { userId: undefined },
+    { exp: undefined }, { iat: undefined },
     { exp: "tomorrow" }, { iat: "yesterday" },
-    { userId: "1" }, { userId: 0 }, { userId: -1 }, { userId: 1.5 },
   ]) {
     expect(await verifyToken(await externalToken(claims))).toBeNull();
   }
@@ -84,10 +99,7 @@ test("다른 알고리즘, 발급자, 대상의 토큰 거부", async () => {
   expect(await verifyToken(await externalToken({ aud: "another-api" }))).toBeNull();
 });
 
-test("잘못된 발급 입력 거부", async () => {
-  for (const userId of [0, -1, 1.5, NaN, Infinity, Number.MAX_SAFE_INTEGER + 1]) {
-    await expect(signToken({ userId })).rejects.toThrow("userId");
-  }
+test("잘못된 유효 시간 거부", async () => {
   for (const expiresIn of [0, -1, 1.5, NaN, Infinity, Number.MAX_SAFE_INTEGER]) {
     await expect(signToken({ userId: 1 }, expiresIn)).rejects.toThrow("유효 시간");
   }

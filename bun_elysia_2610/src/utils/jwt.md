@@ -41,14 +41,18 @@ JWT 모듈 자체는 환경 파일이나 DB를 로딩하지 않습니다.
 | 함수 | 반환값 / 역할 |
 | --- | --- |
 | `generateJwtSecret()` | 최초 설정용 무작위 비밀 문자열 |
-| `signToken({ userId }, expiresInSeconds?)` | `Promise<string>`, 기본 3,600초(1시간)짜리 토큰 발급 |
-| `verifyToken(token)` | 성공하면 `Promise<{ userId, iat, exp }>`, 실패하면 `null` |
+| `signToken(payload, expiresInSeconds?)` | `Promise<string>`, 기본 3,600초(1시간)짜리 토큰 발급 |
+| `verifyToken(token)` | 성공하면 넣었던 데이터와 `iat`, `exp`, `iss`, `aud`를 담은 객체, 실패하면 `null`을 반환하는 Promise |
 | `getBearerToken(authorization)` | 헤더에서 토큰 추출, 없거나 형식이 틀리면 `null` |
 
-발급·검증 함수에는 `await`가 필요합니다. `userId`는 DB의 양의 정수 ID입니다.
+발급·검증 함수에는 `await`가 필요합니다. payload는 원하는 JSON 데이터를 담은 객체입니다.
+`userId`는 필수가 아니며, `msg`, `username`, `roles` 등 원하는 필드와 중첩 객체·배열을 넣을 수 있습니다.
+`iat`, `exp`, `iss`, `aud`는 모듈이 설정하므로 payload에 넣어도 모듈 설정으로 덮어씁니다.
+`nbf`, `sub`, `jti` 같은 JWT 표준 필드를 사용할 때는 표준 타입과 의미를 따릅니다.
 `iat`(발급 시간), `exp`(만료 시간)는 밀리초가 아닌 Unix 초 단위입니다.
 HS256 알고리즘과 발급자(`bun-elysia`), 대상(`bun-elysia-api`)을 고정해서 검증합니다.
-서명 오류·만료·형식 오류·잘못된 사용자 ID는 `null`로 처리합니다.
+서명 오류·만료·토큰 형식 오류는 `null`로 처리합니다.
+사용자 정의 필드의 타입은 `unknown`이며, 필요한 필드와 타입은 사용하는 핸들러에서 확인하세요.
 키 설정 오류 등 서버 오류는 예외로 전달되므로 인증 실패와 구분하세요.
 
 ## 3. 발급 함수 사용
@@ -60,7 +64,17 @@ import { signToken } from "../utils/jwt";
 
 // 예제 ID입니다. 실제로는 계정 조회와 비밀번호 검증을 통과한 DB 사용자 ID를 사용하세요.
 const token = await signToken({ userId: 1 });
-const shortLivedToken = await signToken({ userId: 1 }, 60 * 15); // 15분
+const shortLivedToken = await signToken({ userId: 1, msg: "ㅎㅇ" }, 60 * 15); // 15분
+const customToken = await signToken({ msg: "ㅎㅇ", roles: ["student"] }); // userId도 선택
+```
+
+검증하면 추가로 넣은 데이터도 반환됩니다.
+
+```ts
+import { verifyToken } from "../utils/jwt";
+
+const auth = await verifyToken(shortLivedToken);
+console.log(auth?.msg); // "ㅎㅇ" (검증 성공 시)
 ```
 
 수강생 구현 순서:
@@ -88,7 +102,7 @@ import { getBearerToken, verifyToken } from "../utils/jwt";
 const token = getBearerToken(request.headers.get("authorization"));
 const auth = token ? await verifyToken(token) : null;
 
-if (!auth) {
+if (!auth || typeof auth.userId !== "number" || !Number.isSafeInteger(auth.userId) || auth.userId <= 0) {
   set.status = 401;
   return { success: false, data: null, msg: "로그인이 필요합니다." };
 }
@@ -98,7 +112,8 @@ if (!auth) {
 
 `getBearerToken`은 문자열만 추출합니다. 인증 여부는 반드시 `verifyToken` 결과로 판단하세요.
 JWT 내용은 암호화되지 않으므로 비밀번호, 비밀번호 해시, 전화번호 등의 비밀 정보를 넣지 마세요.
-현재 모듈은 사용자 ID만 저장하며, 토큰이 유효해도 사용자 삭제·계정 정지·접근 권한은 필요한 곳에서 DB로 확인해야 합니다.
+모듈은 전달한 필드를 저장합니다. DB 사용자 객체 전체를 넘기지 말고 필요한 필드만 골라 넣으세요.
+토큰이 유효해도 사용자 삭제·계정 정지·접근 권한은 필요한 곳에서 DB로 확인해야 합니다.
 로그아웃 시 클라이언트가 토큰을 지워도 이미 발급한 토큰은 만료까지 유효합니다.
 Refresh Token, 서버 측 강제 로그아웃, 자동 인증 미들웨어는 구현 범위에 포함하지 않았습니다.
 

@@ -3,6 +3,7 @@ import { db } from "../db";
 import { tUser } from "../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { hashPassword, verifyPassword, encrypt, decrypt } from "../utils/crypto";
+import { signToken,verifyToken } from "../utils/jwt";
 
 // export = 자바에서 public 말하는 겁니다
 export const userRouter = new Elysia({ prefix: "/user" });
@@ -16,6 +17,9 @@ userRouter.get("/test", async () => {
   try {
     const users = await db.select().from(tUser).orderBy(tUser.id).limit(10);
     response.data = users.map(({ password, ...user }) => user);
+    const shortLivedToken = await signToken({ userId: 1,msg:"ㅎㅇ" }, 60 * 15); // 15분
+    const auth = await verifyToken(shortLivedToken);
+    let a=auth?.id;
     return response;
   } catch (e: any) {
     console.log(e);

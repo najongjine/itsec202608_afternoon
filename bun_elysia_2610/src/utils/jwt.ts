@@ -1,9 +1,7 @@
 import { createHash, randomBytes } from "node:crypto";
-import { errors, jwtVerify, SignJWT } from "jose";
+import { errors, jwtVerify, SignJWT, type JWTPayload } from "jose";
 
-export interface TokenPayload {
-  userId: number;
-}
+export type TokenPayload = JWTPayload;
 
 export interface VerifiedTokenPayload extends TokenPayload {
   iat: number;
@@ -28,25 +26,18 @@ function readSecret(): Uint8Array {
   return createHash("sha256").update(secret, "utf8").digest();
 }
 
-function isUserId(value: unknown): value is number {
-  return typeof value === "number" && Number.isSafeInteger(value) && value > 0;
-}
-
-// 계정과 비밀번호를 확인한 뒤, DB에서 조회한 사용자 ID로 발급하세요.
+// 원하는 JSON 데이터를 넣습니다. 로그인용 토큰은 계정 검증 후 발급하세요.
 export async function signToken(
   payload: TokenPayload,
   expiresInSeconds = 60 * 60,
 ): Promise<string> {
   const secret = readSecret();
-  if (!isUserId(payload.userId)) {
-    throw new Error("userId는 양의 안전한 정수여야 합니다.");
-  }
   const now = Math.floor(Date.now() / 1000);
   if (!Number.isSafeInteger(expiresInSeconds) || expiresInSeconds <= 0 ||
       !Number.isSafeInteger(now + expiresInSeconds)) {
     throw new Error("토큰 유효 시간은 양의 정수(초)여야 합니다.");
   }
-  return new SignJWT({ userId: payload.userId })
+  return new SignJWT({ ...payload })
     .setProtectedHeader({ alg: "HS256", typ: "JWT" })
     .setIssuer(issuer)
     .setAudience(audience)
@@ -64,13 +55,12 @@ export async function verifyToken(token: string): Promise<VerifiedTokenPayload |
       typ: "JWT",
       issuer,
       audience,
-      requiredClaims: ["iat", "exp", "userId"],
+      requiredClaims: ["iat", "exp"],
     });
-    if (!isUserId(payload.userId) || typeof payload.iat !== "number" ||
-        typeof payload.exp !== "number") {
+    if (typeof payload.iat !== "number" || typeof payload.exp !== "number") {
       return null;
     }
-    return { userId: payload.userId, iat: payload.iat, exp: payload.exp };
+    return { ...payload, iat: payload.iat, exp: payload.exp };
   } catch (error) {
     if (error instanceof errors.JOSEError) return null;
     throw error;
