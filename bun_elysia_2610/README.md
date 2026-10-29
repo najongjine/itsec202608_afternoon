@@ -26,6 +26,13 @@ bun run dev
 
 Open http://localhost:3000/ with your browser to see the result.
 
+## JWT
+
+토큰 발급·검증 모듈: `src/utils/jwt.ts`
+
+환경 변수 설정과 사용 예제는 [JWT 사용 매뉴얼](src/utils/jwt.md)을 참고하세요.
+로그인 API 핸들러는 수강생 실습을 위해 직접 구현합니다.
+
 ## PostgreSQL + Drizzle ORM
 
 1. 의존성을 설치합니다.
