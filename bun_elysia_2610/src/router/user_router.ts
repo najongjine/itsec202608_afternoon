@@ -20,6 +20,7 @@ userRouter.get("/test", async () => {
     const shortLivedToken = await signToken({ userId: 1,msg:"ㅎㅇ" }, 60 * 15); // 15분
     const auth = await verifyToken(shortLivedToken);
     let a=auth?.id;
+    response.data=shortLivedToken;
     return response;
   } catch (e: any) {
     console.log(e);
@@ -61,7 +62,8 @@ userRouter.post("/register", async ({request}) => {
     .returning();
     data=data[0]||{};
     const { password: storedPassword, ...user } = data;
-    response.data = user;
+    const token = await signToken({ userId: user.id }, 60 * 60 * 24 * 365); // 365일
+    response.data = { user, token };
     return response;
   } catch (e: any) {
     console.log(e);
