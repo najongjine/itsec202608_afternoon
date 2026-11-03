@@ -3,13 +3,13 @@
 // 홈 페이지 주소: /
 export default function Home() {
   return (
-    <section className="card">
-      <h1>홈 페이지</h1>
-      <p>환영합니다! Next.js로 만든 첫 번째 홈페이지입니다.</p>
-      <p>위쪽 메뉴를 눌러 페이지를 이동해 보세요.</p>
-      <Link href="/test1" className="button">
-        테스트1 페이지로 이동
-      </Link>
-    </section>
+    <div>
+      <div> 블록1 </div>
+      <div> 블록2 </div>
+      <div> main, section, p, h1 이런 태그들은 div를 개조한거 뿐이다. 큰 차이는 없다. </div>
+      <img src="image.jpg" alt="이미지 설명" />
+      <video src="video.mp4" controls />
+      <Link href="/about">About 페이지로 이동</Link>
+    </div>
   );
 }
