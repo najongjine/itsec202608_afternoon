@@ -1,4 +1,5 @@
-﻿import Link from "next/link";
+﻿"use client";
+import Link from "next/link";
 
 // 홈 페이지 주소: /
 export default function Home() {
@@ -12,7 +13,7 @@ export default function Home() {
     <div>
       <div> 로또번호 생성기 </div>
       <div>번호: {number1}</div>
-      <button onClick={test1}>테스트버튼</button>
+      <button onClick={(e)=>{test1()}}>테스트버튼</button>
     </div>
   );
 }
