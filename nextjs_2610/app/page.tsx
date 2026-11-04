@@ -2,14 +2,17 @@
 
 // 홈 페이지 주소: /
 export default function Home() {
+  let number1=1;
+
+  function test1(){
+    number1++;
+    console.log(`${number1}`);
+  }
   return (
     <div>
-      <div> 블록1 </div>
-      <div> 블록2 </div>
-      <div> main, section, p, h1 이런 태그들은 div를 개조한거 뿐이다. 큰 차이는 없다. </div>
-      <img src="image.jpg" alt="이미지 설명" />
-      <video src="video.mp4" controls />
-      <Link href="/about">About 페이지로 이동</Link>
+      <div> 로또번호 생성기 </div>
+      <div>번호: {number1}</div>
+      <button onClick={test1}>테스트버튼</button>
     </div>
   );
 }
