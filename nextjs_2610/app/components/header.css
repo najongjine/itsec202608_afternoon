@@ -1,0 +1,78 @@
+/* 헤더 */
+.header {
+  background: #ffffff;
+  border-bottom: 1px solid #dddddd;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* 페이지 메뉴: 다음 줄에서 중앙에 크게 표시합니다. */
+.menu {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  gap: 16px 40px;
+  padding: 12px 0;
+  font-size: 20px;
+}
+
+/* 회원 메뉴: 첫 줄의 우측 상단에 표시합니다. */
+.auth-menu {
+  display: flex;
+  align-self: flex-start;
+  gap: 16px;
+  margin-left: auto;
+  font-size: 14px;
+}
+
+/* 링크 글자는 끊지 않고, 메뉴 단위로 줄바꿈합니다. */
+.menu a,
+.auth-menu a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  white-space: nowrap;
+}
+
+.menu a:hover,
+.auth-menu a:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+/* 화면 너비가 600px 이하이면 휴대폰용 크기와 간격을 적용합니다. */
+@media (max-width: 600px) {
+  .header-content {
+    gap: 12px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .logo {
+    font-size: 18px;
+  }
+
+  .auth-menu {
+    gap: 12px;
+  }
+
+  .menu {
+    gap: 8px 20px;
+    padding: 4px 0;
+    font-size: 18px;
+  }
+}

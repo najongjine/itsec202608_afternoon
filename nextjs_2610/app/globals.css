@@ -33,39 +33,6 @@ a:focus-visible {
   padding: 0 20px;
 }
 
-/* 헤더 */
-.header {
-  background: #ffffff;
-  border-bottom: 1px solid #dddddd;
-}
-
-.header-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 16px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-}
-
-.logo {
-  font-size: 22px;
-  font-weight: bold;
-}
-
-/* 메뉴 간격 */
-.menu {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.menu a:hover {
-  color: #2563eb;
-  text-decoration: underline;
-}
-
 /* 본문: 남는 높이를 채워서 푸터를 아래로 밀어줍니다. */
 main.container {
   flex: 1;
