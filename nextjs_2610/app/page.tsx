@@ -1,28 +1,45 @@
 ﻿"use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // 홈 페이지 주소: /
 export default function Home() {
-  let number1=1;// 시스템 변수(화면에 반영이 잘 안됨)
-  // binding state 변수(화면에 반영이 잘됨)
-  const [number2, setNumber2] = useState<number>(1);
+  // 그냥 1~45
+  const [lottonums, setLottonums]=useState<number[]>([]);
+  // 번호 6개 추첨된거
+  const [finalLottoNums, setFinalLottoNums]=useState<number[]>([]);
+  
+  // 페이지 진입시 무조건 실행되는 함수
+  useEffect(
+    ()=>{
+      init();
+      console.log("페이지 진입시 무조건 실행되는 함수");
+    },[]
+  );
+  function init(){
+    let 임시변수:number[]=[];
+    for(let i=1;i<=45;i++){
+      임시변수.push(i);
+    }
+    setLottonums(임시변수);
+  }
+  function makeLottoNums(){
+    // 바인딩 변수는 변경이 까다로워요. 그래서 시스템 변수에 복제본 만들었어요
+    let _lottonums=lottonums;
+    for(let i=_lottonums.length-1;i>0;i--){
+      // 시스템 변수에 있는 1~45 무작위로 섞기
+      const j=Math.floor(Math.random()*(i+1));
+      [_lottonums[i], _lottonums[j]]=[_lottonums[j], _lottonums[i]];
+    }
+    // 섞은거에서 6개만 잘라서 정렬해서 바인딩 변수에 넣기
+    setFinalLottoNums(_lottonums.slice(0,6).sort((a,b)=>a-b));
+  }
 
-  function test1(){
-    number1++;
-    console.log(`${number1}`);
-  }
-  function test2(){
-    let 임시변수=number2;
-    임시변수++;
-    setNumber2(임시변수);
-  }
   return (
     <div>
       <div> 로또번호 생성기 </div>
-      <div>번호1: {number1}</div>
-      <div>번호2: {number2}</div>
-      <button onClick={(e)=>{test1(); test2();}}>테스트버튼</button>
+      <div>{finalLottoNums.join(", ")}</div>
+      <button onClick={(e)=>{makeLottoNums();}}>로또번호 생성 버튼</button>
     </div>
   );
 }
