@@ -8,6 +8,10 @@ const client = postgres(databaseUrl);
 
 export const db = drizzle(client, { schema });
 
+export async function checkDbConnection() {
+  await client`SELECT 1`;
+}
+
 export async function closeDb() {
   await client.end();
 }

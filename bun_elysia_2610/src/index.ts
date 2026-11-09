@@ -1,5 +1,5 @@
 import { Elysia } from "elysia";
-import { closeDb } from "./db";
+import { checkDbConnection, closeDb } from "./db";
 import { userRouter } from "./router/user_router";
 import cors from "@elysia/cors";
 
@@ -36,6 +36,14 @@ app.use(userRouter);
 app.onStop(async () => {
   await closeDb();
 });
+
+try {
+  await checkDbConnection();
+  console.log("[DB] 연결 성공");
+} catch (error) {
+  console.error("[DB] 연결 실패:", error);
+  await closeDb();
+}
 
 app.listen(3000);
 
