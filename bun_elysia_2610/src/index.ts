@@ -1,8 +1,19 @@
 import { Elysia } from "elysia";
 import { closeDb } from "./db";
 import { userRouter } from "./router/user_router";
+import cors from "@elysia/cors";
 
 const app = new Elysia();
+
+app.use(
+  cors({
+    origin:true,
+    methods:"*",
+    allowedHeaders:"*",
+    credentials:true,
+    preflight:true,
+  })
+);
 
 app.get("/", () => "Hello Elysia");
 
