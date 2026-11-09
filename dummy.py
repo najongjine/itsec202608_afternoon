@@ -1,11 +1,4 @@
-def fib(n) :
-    result = [ ]
-    x, y = 1, 1
-    for _ in range(n):
-        result.append(x)
-        x, y = y, x+y
-    print(result)
-    return result
- 
-count = 7
-print(fib(count)[-1])
+a = "REMEMBER NOVEMBER"
+b = a[:3] + a[12:16];
+c = "R AND %s" % "STR";
+print(b+c);
