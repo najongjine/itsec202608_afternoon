@@ -26,7 +26,7 @@ export default function Register() {
         });
       response=await response.json();
       if(!response?.success){
-        alert("회원가입 실패");
+        alert(`회원가입 실패. ${response?.message||"알 수 없는 오류"}`);
         return;
       }
       alert(`회원가입 성공 ${JSON.stringify(response?.data||{})}`);
