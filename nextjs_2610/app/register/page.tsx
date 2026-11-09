@@ -11,6 +11,32 @@ export default function Register() {
     console.log("회원가입 페이지 진입");
   }, []);
 
+  async function onRegister(){
+    try {
+      let response:any= await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/register`,
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json"
+          },
+          body:JSON.stringify({
+            username:username,
+            password:password
+          })
+        });
+      response=await response.json();
+      if(!response?.success){
+        alert("회원가입 실패");
+        return;
+      }
+      alert(`회원가입 성공 ${JSON.stringify(response?.data||{})}`);
+    } catch (error:any) {
+      console.error("!!회원가입 중 오류 발생:", error);
+      alert(`회원가입 중 오류 발생: ${error?.message}`);
+      return; 
+    }
+  }
+
   return (
     <section className="card">
       <h1>회원가입 페이지</h1>
@@ -27,7 +53,7 @@ export default function Register() {
         }}/>
       </div>
       <div>
-        <button>회원가입</button>
+        <button onClick={(e)=>{onRegister()}}>회원가입</button>
       </div>
     </section>
   );
