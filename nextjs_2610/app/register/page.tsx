@@ -13,20 +13,18 @@ export default function Register() {
 
   async function onRegister(){
     try {
+      const formData = new FormData();
+     formData.append("username", username);
+     formData.append("password", password);
       let response:any= await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/register`,
         {
           method:"POST",
-          headers:{
-            "Content-Type":"application/json"
-          },
-          body:JSON.stringify({
-            username:username,
-            password:password
-          })
+          headers:{},
+          body:formData
         });
       response=await response.json();
       if(!response?.success){
-        alert(`회원가입 실패. ${response?.message||"알 수 없는 오류"}`);
+        alert(`회원가입 실패. ${response?.msg||"알 수 없는 오류"}`);
         return;
       }
       alert(`회원가입 성공 ${JSON.stringify(response?.data||{})}`);
