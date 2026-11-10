@@ -1,5 +1,9 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Zustand + persist
+
+공통 모듈: `lib/create-persisted-store.ts` · [사용 매뉴얼](docs/zustand-persist.md)
+
 ## Getting Started
 
 First, run the development server:
