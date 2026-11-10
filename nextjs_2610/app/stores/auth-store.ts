@@ -1,6 +1,6 @@
 "use client";
 
-import { createPersistedStore } from "@/lib/create-persisted-store";
+import { createPersistedStore } from "@/app/lib/create-persisted-store";
 
 // 저장할 사용자 정보의 형태입니다.
 type User = {
