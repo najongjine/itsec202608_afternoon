@@ -1,4 +1,4 @@
-a = "REMEMBER NOVEMBER"
-b = a[:3] + a[12:16];
-c = "R AND %s" % "STR";
-print(b+c);
+# {'x': 1, 'y': 20, 'z': 3}
+d = {'x': 1, 'y': 2}
+d.update({'y': 20, 'z': 3})
+print(d)

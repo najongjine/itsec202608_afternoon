@@ -1,10 +1,14 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useAuthStore } from "../stores/auth-store";
+import { useStoreHydration } from "../lib/create-persisted-store";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const ready = useStoreHydration(useAuthStore);
+  const setLogin = useAuthStore((state) => state.setLogin);
   
   useEffect(() => {
     console.log("로그인 페이지 진입");
@@ -26,6 +30,7 @@ export default function Login() {
         alert(`로그인 실패. ${response?.msg||"알 수 없는 오류"}`);
         return;
       }
+      setLogin(response?.data?.user, response?.data?.token);
       alert(`로그인 성공 ${JSON.stringify(response?.data||{})}`);
     } catch (error:any) {
       console.error("!!로그인 중 오류 발생:", error);
