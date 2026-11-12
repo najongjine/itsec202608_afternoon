@@ -31,7 +31,7 @@ export default function Login() {
         return;
       }
       setLogin(response?.data?.user, response?.data?.token);
-      alert(`로그인 성공 ${JSON.stringify(response?.data||{})}`);
+      alert("로그인 성공");
     } catch (error:any) {
       console.error("!!로그인 중 오류 발생:", error);
       alert(`로그인 중 오류 발생: ${error?.message}`);
@@ -55,7 +55,7 @@ export default function Login() {
         }}/>
       </div>
       <div>
-        <button onClick={(e)=>{onLogin()}}>로그인</button>
+        <button disabled={!ready} onClick={onLogin}>로그인</button>
       </div>
     </section>
   );

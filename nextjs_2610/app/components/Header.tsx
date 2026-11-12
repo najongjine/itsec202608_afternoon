@@ -1,7 +1,15 @@
+"use client";
+
 import Link from "next/link";
+import { useStoreHydration } from "../lib/create-persisted-store";
+import { useAuthStore } from "../stores/auth-store";
 import "./header.css";
 
 export default function Header() {
+  const ready = useStoreHydration(useAuthStore);
+  const user = useAuthStore((state) => state.user);
+  const hasToken = useAuthStore((state) => Boolean(state.token));
+
   return (
     <header className="header">
       <div className="container header-content">
@@ -9,8 +17,18 @@ export default function Header() {
           나의 첫 사이트
         </Link>
         <nav className="auth-menu" aria-label="회원 메뉴">
-          <Link href="/login">로그인</Link>
-          <Link href="/register">회원가입</Link>
+          {!ready ? (
+            <span className="auth-user" role="status">로그인 정보 불러오는 중...</span>
+          ) : user && hasToken ? (
+            <span className="auth-user">
+              {user.username}님 (회원 번호: {user.id})
+            </span>
+          ) : (
+            <>
+              <Link href="/login">로그인</Link>
+              <Link href="/register">회원가입</Link>
+            </>
+          )}
         </nav>
         {/* 메뉴를 추가하려면 여기에 Link를 하나 더 넣으세요. */}
         <nav className="menu" aria-label="메인 메뉴">

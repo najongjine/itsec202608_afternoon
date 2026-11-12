@@ -33,10 +33,19 @@
 /* 회원 메뉴: 첫 줄의 우측 상단에 표시합니다. */
 .auth-menu {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   align-self: flex-start;
   gap: 16px;
   margin-left: auto;
   font-size: 14px;
+}
+
+.auth-user {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  overflow-wrap: anywhere;
 }
 
 /* 링크 글자는 끊지 않고, 메뉴 단위로 줄바꿈합니다. */
