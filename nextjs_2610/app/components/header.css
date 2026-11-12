@@ -48,6 +48,22 @@
   overflow-wrap: anywhere;
 }
 
+.auth-logout {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.auth-logout:focus-visible {
+  outline: 3px solid #2563eb;
+  outline-offset: 4px;
+}
+
 /* 링크 글자는 끊지 않고, 메뉴 단위로 줄바꿈합니다. */
 .menu a,
 .auth-menu a {
@@ -58,7 +74,8 @@
 }
 
 .menu a:hover,
-.auth-menu a:hover {
+.auth-menu a:hover,
+.auth-logout:hover {
   color: #2563eb;
   text-decoration: underline;
 }

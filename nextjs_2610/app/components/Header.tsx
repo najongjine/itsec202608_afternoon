@@ -9,6 +9,7 @@ export default function Header() {
   const ready = useStoreHydration(useAuthStore);
   const user = useAuthStore((state) => state.user);
   const hasToken = useAuthStore((state) => Boolean(state.token));
+  const clearLogin = useAuthStore((state) => state.clearLogin);
 
   return (
     <header className="header">
@@ -20,9 +21,14 @@ export default function Header() {
           {!ready ? (
             <span className="auth-user" role="status">로그인 정보 불러오는 중...</span>
           ) : user && hasToken ? (
-            <span className="auth-user">
-              {user.username}님 (회원 번호: {user.id})
-            </span>
+            <>
+              <span className="auth-user">
+                {user.username}님 (회원 번호: {user.id})
+              </span>
+              <button type="button" className="auth-logout" onClick={clearLogin}>
+                로그아웃
+              </button>
+            </>
           ) : (
             <>
               <Link href="/login">로그인</Link>
