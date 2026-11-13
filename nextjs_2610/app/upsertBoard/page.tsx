@@ -47,21 +47,23 @@ export default function UpsertBoard() {
 
   return (
     <section className="card">
-      <h1>로그인 페이지</h1>
+      <h1>글 작성</h1>
       <div>
-        <span>아이디:</span>
+        <span>제목:</span>
         <input type="text" onChange={(e)=>{
-          setUsername(e?.target?.value||"");
+          setTitle(e?.target?.value||"");
         }} />
       </div>
+
       <div>
-        <span>비밀번호:</span>
-        <input type="password" onChange={(e)=>{
-          setPassword(e?.target?.value||"");
-        }}/>
+        <span>내용:</span>
+        <textarea onChange={(e)=>{
+          setContent(e?.target?.value||"");
+        }} />
       </div>
+   
       <div>
-        <button disabled={!ready} onClick={onLogin}>로그인</button>
+        <button disabled={!ready} onClick={(e)=>{onSave();}}>저장</button>
       </div>
     </section>
   );
