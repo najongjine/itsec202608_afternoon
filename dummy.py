@@ -1,4 +1,4 @@
-# {'x': 1, 'y': 20, 'z': 3}
-d = {'x': 1, 'y': 2}
-d.update({'y': 20, 'z': 3})
-print(d)
+TestList = [1,2,3,4,5]
+TestList = list(map(lambda num : num + 100, TestList))
+
+print(TestList)
