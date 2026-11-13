@@ -6,8 +6,8 @@ import { hashPassword, verifyPassword, encrypt, decrypt } from "../utils/crypto"
 import { signToken,verifyToken } from "../utils/jwt";
 
 // export = 자바에서 public 말하는 겁니다
-export const boardRouter = new Elysia({ prefix: "/user" });
-// localhost:3000/user/test
+export const boardRouter = new Elysia({ prefix: "/board" });
+
 boardRouter.get("/test", async () => {
   let response: { success: boolean; data: any; msg: string } = {
     success: true,
