@@ -3,7 +3,7 @@ import { db } from "../db";
 import { tUser } from "../../drizzle/schema";
 import { eq } from "drizzle-orm";
 import { hashPassword, verifyPassword, encrypt, decrypt } from "../utils/crypto";
-import { signToken,verifyToken } from "../utils/jwt";
+import { getBearerToken, signToken, verifyToken } from "../utils/jwt";
 
 // export = 자바에서 public 말하는 겁니다
 export const boardRouter = new Elysia({ prefix: "/board" });
@@ -29,13 +29,30 @@ boardRouter.get("/test", async () => {
     return response;
   }
 });
-boardRouter.post("/register", async ({request}) => {
+boardRouter.post("/upsert", async ({request, set}) => {
   let response: { success: boolean; data: any; msg: string } = {
     success: true,
     data: null,
     msg: "",
   };
   try {
+    // Authorization: Bearer <토큰> 헤더에서 토큰을 꺼냅니다.
+    const accessToken = getBearerToken(request.headers.get("authorization"));
+    if (!accessToken) {
+      response.success = false;
+      response.msg = "인증 토큰이 필요합니다.";
+      return response;
+    }
+
+    // 서명과 만료 시간을 검증한 뒤, 로그인 시 넣었던 userId를 꺼냅니다.
+    const auth = await verifyToken(accessToken);
+    const userId = auth?.userId;
+    if (typeof userId !== "number" || !Number.isSafeInteger(userId) || userId <= 0) {
+      response.success = false;
+      response.msg = "유효하지 않거나 만료된 인증 토큰입니다.";
+      return response;
+    }
+
     // request 라는 커다란 데이터 안에서 formdata 라는것만 꺼내
     const formdata=await request.formData();
     /* formdata라는 큰 상자에서 username,password 라는거 꺼내. 
