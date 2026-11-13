@@ -46,8 +46,8 @@ boardRouter.post("/upsert", async ({request, set}) => {
 
     // 서명과 만료 시간을 검증한 뒤, 로그인 시 넣었던 userId를 꺼냅니다.
     const auth = await verifyToken(accessToken);
-    const userId = auth?.userId;
-    if (typeof userId !== "number" || !Number.isSafeInteger(userId) || userId <= 0) {
+    const userId = Number(auth?.userId||0);
+    if (!userId) {
       response.success = false;
       response.msg = "유효하지 않거나 만료된 인증 토큰입니다.";
       return response;
