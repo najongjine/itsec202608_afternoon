@@ -2,6 +2,7 @@ import { Elysia } from "elysia";
 import { checkDbConnection, closeDb } from "./db";
 import { userRouter } from "./router/user_router";
 import cors from "@elysia/cors";
+import { boardRouter } from "./router/board_router";
 
 const app = new Elysia();
 
@@ -33,6 +34,7 @@ app.get("/test2", async ({ query }) => {
 });
 
 app.use(userRouter);
+app.use(boardRouter);
 app.onStop(async () => {
   await closeDb();
 });

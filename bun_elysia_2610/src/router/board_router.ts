@@ -8,19 +8,34 @@ import { getBearerToken, signToken, verifyToken } from "../utils/jwt";
 // export = 자바에서 public 말하는 겁니다
 export const boardRouter = new Elysia({ prefix: "/board" });
 
-boardRouter.get("/test", async () => {
+boardRouter.get("/get_board_list", async () => {
   let response: { success: boolean; data: any; msg: string } = {
     success: true,
     data: null,
     msg: "",
   };
   try {
-    const users = await db.select().from(tUser).orderBy(tUser.id).limit(10);
-    response.data = users.map(({ password, ...user }) => user);
-    const shortLivedToken = await signToken({ userId: 1,msg:"ㅎㅇ" }, 60 * 15); // 15분
-    const auth = await verifyToken(shortLivedToken);
-    let a=auth?.id;
-    response.data=shortLivedToken;
+    let data = await db.select().from(tBoard).orderBy(tBoard.id).limit(1000);
+    response.data = data;
+    return response;
+  } catch (e: any) {
+    console.log(e);
+    response.success = false;
+    response.msg = `!!!error. ${e?.message}`;
+    return response;
+  }
+});
+boardRouter.get("/get_a_board", async ({query}) => {
+  let response: { success: boolean; data: any; msg: string } = {
+    success: true,
+    data: null,
+    msg: "",
+  };
+  try {
+    let board_id=Number(query?.board_id?.trim()||0);
+    let data:any = await db.select().from(tBoard).where(eq(tBoard.id, board_id)).limit(1);
+    data=data[0]||{};
+    response.data = data;
     return response;
   } catch (e: any) {
     console.log(e);
