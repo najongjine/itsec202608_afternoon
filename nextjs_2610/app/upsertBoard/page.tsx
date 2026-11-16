@@ -1,13 +1,21 @@
 "use client";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useAuthStore } from "../stores/auth-store";
 import { useStoreHydration } from "../lib/create-persisted-store";
 import { BoardData } from "../types/board_types";
 
 
 export default function UpsertBoard() {
+  return (
+    <Suspense fallback={<p role="status">글 작성 페이지를 불러오는 중...</p>}>
+      <UpsertBoardForm />
+    </Suspense>
+  );
+}
+
+function UpsertBoardForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const board_id = Number(searchParams?.get("board_id") || 0);
@@ -26,31 +34,44 @@ export default function UpsertBoard() {
   });
   
   useEffect(() => {
-    console.log("글작성 페이지 진입");
-    init();
-  }, []);
+    if (!ready || !Number.isInteger(board_id) || board_id <= 0) return;
 
-  async function init(){
-    try {
-      let response:any= await fetch(`${process.env.NEXT_PUBLIC_API_URL}/board/get_a_board`,
-        {
-          method:"GET",
-          headers:{
-            authorization: `Bearer ${token||""}`
+    const controller = new AbortController();
+
+    async function init() {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/board/get_a_board?board_id=${board_id}`,
+          {
+            method: "GET",
+            headers: {
+              authorization: `Bearer ${token || ""}`,
+            },
+            signal: controller.signal,
           },
-        });
-      response=await response.json();
-      if(!response?.success){
-        alert(`글 불러오기 실패. ${response?.msg||"알 수 없는 오류"}`);
-        return;
+        );
+        const result: { success: boolean; data: BoardData; msg?: string } =
+          await response.json();
+        if (controller.signal.aborted) return;
+        if (!response.ok || !result.success) {
+          alert(`글 불러오기 실패. ${result.msg || "알 수 없는 오류"}`);
+          return;
+        }
+        if (!result.data?.id) {
+          alert("게시글을 찾을 수 없습니다.");
+          return;
+        }
+        setBoard(result?.data||{});
+      } catch (error: unknown) {
+        if (controller.signal.aborted) return;
+        console.error("!!글 불러오기 중 오류 발생:", error);
+        alert(`글 불러오기 중 오류 발생: ${error instanceof Error ? error.message : "알 수 없는 오류"}`);
       }
-      setBoard(response?.data || {});
-    } catch (error:any) {
-      console.error("!!글 불러오기 중 오류 발생:", error);
-      alert(`글 불러오기 중 오류 발생: ${error?.message}`);
-      return; 
     }
-  }
+
+    void init();
+    return () => controller.abort();
+  }, [board_id, ready, token]);
 
   async function onSave(){
     try {
