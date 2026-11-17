@@ -47,7 +47,7 @@ export default function BoardList() {
       <div>
         {boardList?.length && boardList?.map((board) => (
           <div key={board.id} onClick={()=>{
-            router.push(`/board?board_id=${board.id}`);
+            router.push(`/board_detail?board_id=${board.id}`);
           }}>
             <h2>{board.title}</h2>
           </div>
