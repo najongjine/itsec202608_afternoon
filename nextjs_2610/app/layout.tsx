@@ -2,6 +2,7 @@
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import "./globals.css";
+import "./board.css";
 
 export const metadata: Metadata = {
   title: "나의 첫 Next.js 사이트",

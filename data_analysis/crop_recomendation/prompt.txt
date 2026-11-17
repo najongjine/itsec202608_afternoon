@@ -1,0 +1,15 @@
+https://www.kaggle.com/datasets/atharvaingle/crop-recommendation-dataset/data
+
+import kagglehub
+
+# Download latest version
+path = kagglehub.dataset_download("atharvaingle/crop-recommendation-dataset")
+
+print("Path to dataset files:", path)
+
+
+
+작물 예측
+
+주어진 토양·기후 조건에서 어떤 작물로 분류되는가?
+LightGBM 분류 모델, 정확도·Macro F1

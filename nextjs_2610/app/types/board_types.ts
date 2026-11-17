@@ -1,9 +1,15 @@
-export type BoardData = {
-    id: number;
-    title: string;
-    content: string;
-    userId: number;
-    createdDt: string;
-    viewcnt: number;
-    likecnt: number;
-}
+export type BoardSummary = {
+  id: number;
+  title: string | null;
+  userId: number;
+  author: string | null;
+  createdDt: string | null;
+};
+
+export type BoardData = BoardSummary & {
+  content: string | null;
+  viewcnt: number | null;
+  likecnt: number | null;
+};
+
+export type Pagination = { page: number; pageSize: number; total: number };

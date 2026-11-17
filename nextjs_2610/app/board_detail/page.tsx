@@ -1,64 +1,65 @@
 "use client";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useAuthStore } from "../stores/auth-store";
-import { useStoreHydration } from "../lib/create-persisted-store";
-import { BoardData } from "../types/board_types";
 
-export default function BoardDetail() {
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useRef, useState } from "react";
+import BoardEditor from "../components/BoardEditor";
+import { deleteBoard, errorMessage, formatBoardDate, parseBoardId } from "../lib/board-api";
+import { boardDocument } from "../lib/board-content";
+import { useBoard } from "../lib/use-board";
+import { useStoreHydration } from "../lib/create-persisted-store";
+import { useAuthStore } from "../stores/auth-store";
+
+export default function BoardDetailPage() {
+  return <Suspense fallback={<p role="status">게시글을 불러오는 중...</p>}><BoardDetail /></Suspense>;
+}
+
+function BoardDetail() {
+  const id = parseBoardId(useSearchParams().get("board_id"));
+  const result = useBoard(id);
   const router = useRouter();
   const ready = useStoreHydration(useAuthStore);
   const user = useAuthStore((state) => state.user);
   const token = useAuthStore((state) => state.token);
-  const hasToken = useAuthStore((state) => Boolean(state.token));
-  const [boardList, setBoardList] = useState<BoardData[]>([]);
-  
-  useEffect(() => {
-    console.log("게시글 리스트");
-    init();
-  }, []);
+  const [deleting, setDeleting] = useState(false);
+  const [error, setError] = useState("");
+  const pending = useRef(false);
+  const board = result?.board;
+  const owner = ready && token && user?.id === board?.userId;
 
-  async function init(){
+  async function onDelete() {
+    if (!id || !token || !owner || pending.current) return;
+    if (!window.confirm("이 게시글을 삭제하시겠습니까? 삭제한 글은 복구할 수 없습니다.")) return;
+    pending.current = true;
+    setDeleting(true);
+    setError("");
     try {
-      let response:any= await fetch(`${process.env.NEXT_PUBLIC_API_URL}/board/get_board_list`,
-        {
-          method:"GET",
-          headers:{
-            authorization: `Bearer ${token||""}`
-          },
-        });
-      response=await response.json();
-      if(!response?.success){
-        alert(`글 불러오기 실패. ${response?.msg||"알 수 없는 오류"}`);
-        return;
-      }
-      setBoardList(response?.data || []);
-    } catch (error:any) {
-      console.error("!!글 불러오기 중 오류 발생:", error);
-      alert(`글 불러오기 중 오류 발생: ${error?.message}`);
-      return; 
+      await deleteBoard(id, token);
+      router.replace("/boardlist");
+    } catch (err) {
+      setError(errorMessage(err));
+      pending.current = false;
+      setDeleting(false);
     }
   }
 
   return (
-    <section className="card">
-      <h1>게시글 리스트</h1>
-      <div>
-        {boardList?.length && boardList?.map((board) => (
-          <div key={board.id} onClick={()=>{
-            router.push(`/board_detail?board_id=${board.id}`);
-          }}>
-            <h2>{board.title}</h2>
+    <section className="card board-page">
+      <Link className="board-back" href="/boardlist">← 게시글 목록</Link>
+      {!id ? <p role="alert">올바른 게시글 주소가 아닙니다.</p> : result?.error ? <p className="board-error" role="alert">{result.error}</p> : !board ? <p role="status">게시글을 불러오는 중...</p> : (
+        <>
+          <header className="board-detail-heading"><h1>{board.title || "제목 없음"}</h1><p className="board-meta">{board.author || `회원 ${board.userId}`} · {formatBoardDate(board.createdDt)}</p></header>
+          <BoardEditor key={`${board.id}:${board.content}`} initialContent={boardDocument(board.content)} readOnly />
+          {error && <p className="board-error" role="alert">{error}</p>}
+          <div className="board-actions">
+            <Link className="board-button secondary" href="/boardlist">목록</Link>
+            {owner && <div className="board-actions-group">
+              {!deleting && <Link className="board-button secondary" href={`/upsertBoard?board_id=${board.id}`}>수정</Link>}
+              <button className="board-button danger" disabled={deleting} onClick={onDelete}>{deleting ? "삭제 중..." : "삭제"}</button>
+            </div>}
           </div>
-        ))}
-        {!boardList?.length && <p>게시글이 없습니다.</p>}
-      </div>
-      <div>
-        <button onClick={()=>{
-          router.push("/upsertBoard");
-        }}>글 작성</button>
-      </div>
+        </>
+      )}
     </section>
   );
 }
